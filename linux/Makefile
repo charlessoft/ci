@@ -64,7 +64,8 @@ tomcat:
 	cd ${INSTALL_ROOT}/apache-tomcat && \
 		cp conf/server.xml conf/server.xml_bak  && \
 		sed -i "72s/\/>//" conf/server.xml && \
-		sed -i "73 i\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ URIEncoding=\"UTF-8\" \/>" conf/server.xml
+		sed -i "73 i\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ URIEncoding=\"UTF-8\" \/>" conf/server.xml && \
+		sed -i "97 i JAVA_OPTS=\"-XX:PermSize=64M -XX:MaxPermSize=128m -Xms512m -Xmx1048m -Duser.timezone=Asia/Shanghai  -Djava.awt.headless=true\"" bin/catalina.sh
 
 #./startup.sh
 buildData:
@@ -79,7 +80,7 @@ jenkins:
 		cp ${JENKINS_SRC}.war ${INSTALL_ROOT}/apache-tomcat/webapps
 
 #install_master: maven tomcat jenkins
-install_master: jdk maven tomcat jenkins
+install_master: tomcat jenkins
 #install_master: maven tomcat jenkins
 	echo "install master"
 
