@@ -38,9 +38,9 @@ $make install_slave
 
 下载安装包:
 ===
---$git submodule init--
+<del>$git submodule init</del>
 
---$git submodule update--
+<del>$git submodule update</del>
 
 submodule 更新库太慢了,直接下载压缩包放在目录下还快些.
 $wget https://github.com/charlessoft/ci_softs/archive/master.zip 
