@@ -8,10 +8,11 @@ APRUTIL_SRC=apr-util-1.3.8
 APACHEHTTP_SRC=httpd-2.2.9
 SUBVERSION_SRC=subversion-1.8.5
 SQLITE_AMALGAMATION_SRC=sqlite-amalgamation-3080301
-
+SOFTS_SRC=../softs
 jdk:
 	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
-	cp ./${JDK_SRC} ${INSTALL_ROOT}
+	cd ${SOFTS_SRC} && \
+		cp ./${JDK_SRC} ${INSTALL_ROOT}
 	chmod +x ${INSTALL_ROOT}/${JDK_SRC}
 	cd ${INSTALL_ROOT} && ./${JDK_SRC}
 
@@ -51,11 +52,13 @@ subversion:
 		make install
 		#./configure --prefix=/opt/svn --with-apxs=/usr/local/apache2.2.9/bin/apxs --with-apr=/usr/local/apr --with-apr-util=/usr/local/apr
 maven:
-	tar zxvf ${MAVEN_SRC}-bin.tar.gz -C ${INSTALL_ROOT}
+	cd ${SOFTS_SRC} && \
+		tar zxvf ${MAVEN_SRC}-bin.tar.gz -C ${INSTALL_ROOT}
 	test -d ${INSTALL_ROOT}/apache-maven ||  ln -s ${INSTALL_ROOT}/${MAVEN_SRC} ${INSTALL_ROOT}/apache-maven 
 
 tomcat:
-	tar zxvf ${TOMCAT_SRC}.tar.gz -C ${INSTALL_ROOT}
+	cd ${SOFTS_SRC} && \
+		tar zxvf ${TOMCAT_SRC}.tar.gz -C ${INSTALL_ROOT}
 	test -d ${INSTALL_ROOT}/apache-tomcat || ln -s ${INSTALL_ROOT}/${TOMCAT_SRC} ${INSTALL_ROOT}/apache-tomcat
 	#### 修改配置脚本--改成UTF-8 
 	cd ${INSTALL_ROOT}/apache-tomcat && \
@@ -64,11 +67,20 @@ tomcat:
 		sed -i "73 i\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ URIEncoding=\"UTF-8\" \/>" conf/server.xml
 
 #./startup.sh
+buildData:
+	wget https://github.com/charlessoft/ci_softs/archive/master.zip -O ../master.zip 
+	cd ../ && \
+		unzip master.zip -d ${SOFTS_SRC} 
+	cd ../ && \
+		mv ${SOFTS_SRC}/ci_softs-master/*.* ${SOFTS_SRC}
 
 jenkins:
-	cp ${JENKINS_SRC}.war ${INSTALL_ROOT}/apache-tomcat/webapps
+	cd ${SOFTS_SRC} && \
+		cp ${JENKINS_SRC}.war ${INSTALL_ROOT}/apache-tomcat/webapps
 
+#install_master: maven tomcat jenkins
 install_master: jdk maven tomcat jenkins
+#install_master: maven tomcat jenkins
 	echo "install master"
 
 install_slave: jdk maven
