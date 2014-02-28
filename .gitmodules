@@ -1,0 +1,3 @@
+[submodule "uds_python"]
+	path = ci_softs 
+	url = https://github.com/charlessoft/ci_softs.git
