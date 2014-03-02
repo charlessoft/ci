@@ -15,9 +15,9 @@ jdk:
 	chmod +x ${INSTALL_ROOT}/${JDK_SRC}
 	cd ${INSTALL_ROOT} && ./${JDK_SRC}
 
-#echo "export JAVA_HOME=/usr/local/java/jdk1.6.0_38" >> /etc/profile
-#echo "export JAVA_BIN=/usr/local/java/jdk1.6.0_38/bin" >> /etc/profile
-#echo "export M2_HOME=/usr/local/java/apache-maven" >> /etc/profile
+#echo "export JAVA_HOME=/usr/local/jdk1.6.0_38" >> /etc/profile
+#echo "export JAVA_BIN=/usr/local/jdk1.6.0_38/bin" >> /etc/profile
+#echo "export M2_HOME=/usr/local/apache-maven" >> /etc/profile
 #echo "export PATH=$PATH:$JAVA_HOME/bin:$M2_HOME/bin" >> /etc/profile
 #echo "export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar" >> /etc/profile
 #echo "export JAVA_HOME JAVA_BIN PATH CLASSPATH" >> /etc/profile
@@ -67,7 +67,7 @@ tomcat:
 jenkins:
 	cp ${JENKINS_SRC}.war ${INSTALL_ROOT}/apache-tomcat/webapps
 
-install_master: maven tomcat
+install_master: maven tomcat jenkins
 	echo "install master"
 
 install_slave: maven
