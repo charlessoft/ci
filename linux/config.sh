@@ -6,3 +6,7 @@ else
 fi
 echo "jenkins:jenkins" | chpasswd
 su - jenkins
+#ssh-keygen
+#cd .ssh
+#cat id_rsa.pub > authorized_keys
+#chmod 700 authorized_keys
