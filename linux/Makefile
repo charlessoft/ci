@@ -8,13 +8,14 @@ APRUTIL_SRC=apr-util-1.3.8
 APACHEHTTP_SRC=httpd-2.2.9
 SUBVERSION_SRC=subversion-1.8.5
 SQLITE_AMALGAMATION_SRC=sqlite-amalgamation-3080301
-#jdk
+
 jdk:
 	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
 	cp ./${JDK_SRC} ${INSTALL_ROOT}
 	chmod +x ${INSTALL_ROOT}/${JDK_SRC}
 	cd ${INSTALL_ROOT} && ./${JDK_SRC}
 
+#如何写入到 /etc/profile中
 #echo "export JAVA_HOME=/usr/local/jdk1.6.0_38" >> /etc/profile
 #echo "export JAVA_BIN=/usr/local/jdk1.6.0_38/bin" >> /etc/profile
 #echo "export M2_HOME=/usr/local/apache-maven" >> /etc/profile
@@ -67,8 +68,8 @@ tomcat:
 jenkins:
 	cp ${JENKINS_SRC}.war ${INSTALL_ROOT}/apache-tomcat/webapps
 
-install_master: maven tomcat jenkins
+install_master: jdk maven tomcat jenkins
 	echo "install master"
 
-install_slave: maven
+install_slave: jdk maven
 	echo "install slave"
