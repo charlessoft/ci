@@ -35,6 +35,6 @@ tomcat:
 jenkins:
 	cp ${JENKINS_SRC}.war ${INSTALL_ROOT}/apache-tomcat/webapps
 
-install_master: $(maven),$(tomcat)
+install_master: maven tomcat
 	echo "install master"
 
