@@ -36,4 +36,12 @@ slave:
 
 $make install_slave
 
+下载安装包:
+===
+$git submodule init
+
+$git submodule update
+
+把文件拷贝到Makefile路径下...
+
 
