@@ -18,5 +18,10 @@ cp apache-tomcat-7.0.52.tar.gz /usr/local/java
 cd /usr/local/java
 tar zxvf apache-tomcat-7.0.52.tar.gz
 ln -s apache-tomcat-7.0.52 apache-tomcat
-cd apache-tomcat/bin
+cp /usr/local/java/apache-tomcat/conf/server.xml /usr/local/java/apache-tomcat/conf/server.xml_bak
+# 修改配置脚本--改成UTF-8
+sed -i "72s/\/>//" /usr/local/java/apache-tomcat/conf/server.xml 
+sed -i "73 i\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ URIEncoding=\"UTF-8\" \/>" /usr/local/java/apache-tomcat/conf/server.xml
+
 #./startup.sh
+
