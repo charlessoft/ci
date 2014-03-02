@@ -26,10 +26,10 @@ apache:
 	tar zxvf ${APR_SRC}.tar.gz -C ${INSTALL_ROOT}
 	tar zxvf ${APRUTIL_SRC}.tar.gz -C ${INSTALL_ROOT}
 	tar zxvf ${APACHEHTTP_SRC}.tar.gz -C ${INSTALL_ROOT}
-	#cd ${INSTALL_ROOT}/${APR_SRC} && \
-	#	./configure --prefix=/usr/local/apr-httpd && \
-	#	make && \
-	#	make install 
+	cd ${INSTALL_ROOT}/${APR_SRC} && \
+		./configure --prefix=/usr/local/apr-httpd && \
+		make && \
+		make install 
 	cd ${INSTALL_ROOT}/${APRUTIL_SRC} && \
 		./configure --prefix=/usr/local/apr-util-httpd --with-apr=/usr/local/apr-httpd/ && \
 		make && \
