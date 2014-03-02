@@ -1,4 +1,4 @@
-INSTALL_ROOT=/usr/local/java
+INSTALL_ROOT=/usr/local
 TOMCAT_SRC=apache-tomcat-7.0.52
 JDK_SRC=jdk-6u38-ea-bin-b04-linux-i586-31_oct_2012.bin
 MAVEN_SRC=apache-maven-3.2.1
