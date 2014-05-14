@@ -11,8 +11,7 @@ SQLITE_AMALGAMATION_SRC=sqlite-amalgamation-3080301
 SOFTS_SRC=../softs
 jdk:
 	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
-	cd ${SOFTS_SRC} && \
-		cp ./${JDK_SRC} ${INSTALL_ROOT}
+	cd ${SOFTS_SRC}; cp ${SOFTS_SRC}/${JDK_SRC} ${INSTALL_ROOT}
 	chmod +x ${INSTALL_ROOT}/${JDK_SRC}
 	cd ${INSTALL_ROOT} && ./${JDK_SRC}
 
@@ -25,9 +24,9 @@ jdk:
 #echo "export JAVA_HOME JAVA_BIN PATH CLASSPATH" >> /etc/profile
 
 apache:
-	tar zxvf ${APR_SRC}.tar.gz -C ${INSTALL_ROOT}
-	tar zxvf ${APRUTIL_SRC}.tar.gz -C ${INSTALL_ROOT}
-	tar zxvf ${APACHEHTTP_SRC}.tar.gz -C ${INSTALL_ROOT}
+	tar zxvf ${SOFTS_SRC}/${APR_SRC}.tar.gz -C ${INSTALL_ROOT}
+	tar zxvf ${SOFTS_SRC}/${APRUTIL_SRC}.tar.gz -C ${INSTALL_ROOT}
+	tar zxvf ${SOFTS_SRC}/${APACHEHTTP_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${APR_SRC} && \
 		./configure --prefix=/usr/local/apr-httpd && \
 		make && \
@@ -37,14 +36,14 @@ apache:
 		make && \
 		make install
 	cd ${INSTALL_ROOT}/${APACHEHTTP_SRC} && \
-		./configure --prefix=/usr/local/apache2.2.9 --enable-dav --enable-so --enable-maintainer-mode --with-apr=/usr/local/apr-httpd/ --with-apr-util=/usr/local/apr-util-httpd/ && \
+		./configure --prefix=/usr/local/apache2.2.9 --enable-dav --enable-so --enable-maintainer-mode --with-apr=/usr/local/apr-httpd/ --with-apr-util=/usr/local/apr-util-httpd/ --with-included-apr && \
 		make && \
 		make install
 
 subversion:
-	apt-get install zlib1g-dev
-	tar zxvf ${SUBVERSION_SRC}.tar.gz
-	unzip ${SQLITE_AMALGAMATION_SRC}.zip -o -d ${SUBVERSION_SRC}
+	#apt-get install zlib1g-dev 
+	tar zxvf ${SOFTS_SRC}/${SUBVERSION_SRC}.tar.gz
+	unzip ${SOFTS_SRC}/${SQLITE_AMALGAMATION_SRC}.zip -x -d ${SUBVERSION_SRC}
 	cd ${SUBVERSION_SRC} && \
 		mv ${SQLITE_AMALGAMATION_SRC} sqlite-amalgamation  && \
 		./configure --prefix=/opt/svn --with-apr=/usr/local/apr-httpd --with-apr-util=/usr/local/apr-util-httpd  && \
