@@ -1,6 +1,7 @@
 INSTALL_ROOT=/usr/local
 TOMCAT_SRC=apache-tomcat-7.0.52
-JDK_SRC=jdk-6u38-ea-bin-b04-linux-i586-31_oct_2012.bin
+JDK_FILE=jdk-6u38-ea-bin-b04-linux-i586-31_oct_2012.bin
+JDK_SRC=jdk1.6.0_38
 MAVEN_SRC=apache-maven-3.2.1
 JENKINS_SRC=jenkins
 APR_SRC=apr-1.3.6
@@ -11,9 +12,10 @@ SQLITE_AMALGAMATION_SRC=sqlite-amalgamation-3080301
 SOFTS_SRC=../softs
 jdk:
 	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
-	cd ${SOFTS_SRC}; cp ${SOFTS_SRC}/${JDK_SRC} ${INSTALL_ROOT}
-	chmod +x ${INSTALL_ROOT}/${JDK_SRC}
-	cd ${INSTALL_ROOT} && ./${JDK_SRC}
+	cd ${SOFTS_SRC}; cp ${SOFTS_SRC}/${JDK_FILE} ${INSTALL_ROOT}
+	chmod +x ${INSTALL_ROOT}/${JDK_FILE}
+	cd ${INSTALL_ROOT} && ./${JDK_FILE}
+	cd ${INSTALL_ROOT}; ln -s ${JDK_SRC} ${INSTALL_ROOT}/jdk
 
 #如何写入到 /etc/profile中
 #echo "export JAVA_HOME=/usr/local/jdk1.6.0_38" >> /etc/profile
