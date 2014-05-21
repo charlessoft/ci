@@ -90,4 +90,4 @@ install_slave: jdk maven
 
 users:
 	chmod +x CreateUser.sh 
-	sh CreateUser.sh
+	sh UserMgr/CreateUser.sh

@@ -1,0 +1,70 @@
+#!/usr/bin/python
+#coding:utf-8
+#hoos/post-receive
+#使用步骤
+#1. /Useors/charles --需要修改
+#2. 先要要分支目录下,执行git clone.... -b 分支名 目录
+
+import sys,traceback
+import os,time
+import subprocess
+from datetime import datetime
+
+'''取得执行git命令的输出字符'''
+def git(args):
+    args = ['git'] + args
+    git = subprocess.Popen(args, stdout = subprocess.PIPE)
+    details = git.stdout.read()
+    details = details.strip()
+    return details
+
+'''读取当前提交的版本库的名称'''
+def get_repo_name():
+    if git(['rev-parse','--is-bare-repository']) == 'true':
+        name = os.path.basename(os.getcwd())
+        if name.endswith('.git'):
+            name = name[:-4]
+            return name
+        else:
+            return os.path.basename(os.path.dirname(os.getcwd()))
+REPO_NAME = get_repo_name()
+
+        #读取git调用钩子时的参数
+#取得分支名
+if __name__ == '__main__':
+    for line in sys.stdin.xreadlines():
+        old, new, ref = line.strip().split(' ')
+        branchname = ref.replace('refs/heads/','')
+        print 'old', old
+        print 'new', new
+        print 'ref', ref
+        print 'branchname', branchname
+        print 'REPO_NAME=', REPO_NAME
+        sys.stdout.write("\nallen's hooks receive %s,%s\n" % (REPO_NAME,branchname))
+        # 该分支的发布目录不存在就退出
+        pullpath = "/Users/charles/%s" % (branchname)
+        if not os.path.exists(pullpath):
+            os.system('mkdir '+ pullpath)
+            exit(0)
+    nowtime = time.strftime('%Y-%m-%d %H:%M:%s')
+    f=file(r'/Users/charles/git-post-receive-%s.log' % REPO_NAME,'aw')
+    f.write('%s----%s-----\n' % (ref,nowtime))
+    try:
+        cmd = 'cd '+ pullpath +'; env -i git log -1 --pretty=format:"%s"'
+        logcomment = os.popen(cmd).read()
+        print 'logcomment=', logcomment
+        f.write('logcomment:%s\n' % logcomment)
+        f.write('%s  %s\n' % ( old , new ))
+        f.write('receive %s,%s\n' % (REPO_NAME,branchname))
+        #用umask 设置git pull执行新建的文件的权限 
+        cmd = 'umask 002; cd %s/;env -i git pull' % (pullpath)
+        print cmd
+        f.write('cmd:%s\n' % (cmd))
+        os.system(cmd)
+        f.close()
+        sys.stdout.write(',pull complete!\n')
+    except:
+        msg = traceback.sys_exc()
+        sys.stderr.write(msg)
+        f.close()
+
