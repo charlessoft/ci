@@ -16,6 +16,7 @@ jdk:
 	chmod +x ${INSTALL_ROOT}/${JDK_FILE}
 	cd ${INSTALL_ROOT} && ./${JDK_FILE}
 	cd ${INSTALL_ROOT}; ln -s ${JDK_SRC} ${INSTALL_ROOT}/jdk
+	sh evn.sh
 
 #如何写入到 /etc/profile中
 #echo "export JAVA_HOME=/usr/local/jdk1.6.0_38" >> /etc/profile
@@ -89,5 +90,5 @@ install_slave: jdk maven
 	echo "install slave"
 
 users:
-	chmod +x CreateUser.sh 
-	sh UserMgr/CreateUser.sh
+	chmod +x UserMgr/CreateUser.sh 
+	sh UserMgr/CreateUser.sh 
