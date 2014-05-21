@@ -87,3 +87,7 @@ install_master: tomcat jenkins
 
 install_slave: jdk maven
 	echo "install slave"
+
+users:
+	chmod +x CreateUser.sh 
+	sh CreateUser.sh
