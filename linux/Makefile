@@ -16,7 +16,8 @@ jdk:
 	chmod +x ${INSTALL_ROOT}/${JDK_FILE}
 	cd ${INSTALL_ROOT} && ./${JDK_FILE}
 	cd ${INSTALL_ROOT}; ln -s ${JDK_SRC} ${INSTALL_ROOT}/jdk
-	sh evn.sh
+	chmod +x env.sh
+	sh env.sh
 
 #如何写入到 /etc/profile中
 #echo "export JAVA_HOME=/usr/local/jdk1.6.0_38" >> /etc/profile
