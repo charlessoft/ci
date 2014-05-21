@@ -1,1 +1,1 @@
-jenkins:x:520:520::/home/jenkins:/bin/bash
+jenkins:x:1000:1000:jenkins:/home/jenkins:/bin/bash
