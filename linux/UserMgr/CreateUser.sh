@@ -9,3 +9,12 @@ echo path=$(pwd)/$path
 
 newusers $path/userlist.txt
 chpasswd < $path/userpasswd.txt
+
+#sudo chmod 4755 /usr/local 
+# 创建ci组
+sudo groupadd ci
+sudo chown root:ci /usr/local 
+sudo chmod 755 /usr/local 
+sudo chown jenkins:ci /usr/local 
+
+

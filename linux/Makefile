@@ -10,14 +10,15 @@ APACHEHTTP_SRC=httpd-2.2.9
 SUBVERSION_SRC=subversion-1.8.5
 SQLITE_AMALGAMATION_SRC=sqlite-amalgamation-3080301
 SOFTS_SRC=../softs
+init: users
+	chmod +x env.sh
+	sh env.sh
 jdk:
 	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
 	cd ${SOFTS_SRC}; cp ${SOFTS_SRC}/${JDK_FILE} ${INSTALL_ROOT}
 	chmod +x ${INSTALL_ROOT}/${JDK_FILE}
 	cd ${INSTALL_ROOT} && ./${JDK_FILE}
 	cd ${INSTALL_ROOT}; ln -s ${JDK_SRC} ${INSTALL_ROOT}/jdk
-	chmod +x env.sh
-	sh env.sh
 
 #如何写入到 /etc/profile中
 #echo "export JAVA_HOME=/usr/local/jdk1.6.0_38" >> /etc/profile
