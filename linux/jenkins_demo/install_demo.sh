@@ -1,5 +1,13 @@
 #!/bin/bash 
 #使用jenkins用户进行操作
+
+CURUSER=$USER
+if [ $CURUSER != "jenkins" ] ; then     #如果不是jenkins用户就退出
+    echo "user="$CURUSER 
+    echo "please use jenkins account"
+    exit -1
+fi     #ifend
+
 path=$(dirname $0)
 curPath=$(pwd)/$path
 echo curPath=$curPath
