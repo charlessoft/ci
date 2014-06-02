@@ -89,7 +89,12 @@ install_master: tomcat jenkins
 	echo "install master"
 
 install_slave: jdk maven
-	echo "install slave"
+	#链接slave,jenkins会看jdk路径在哪里,
+	#默认的搜索路径是/usr/bin/java 所以可能需要在slave中设置链接就好
+	#cygwin:
+	ln -s /cygdrive/c/Program\ Files\ \(x86\)/Java/jdk1.6.0_38/bin/java.exe /usr/bin/java
+
+	#echo "install slave"
 
 users:
 	chmod +x UserMgr/CreateUser.sh 
