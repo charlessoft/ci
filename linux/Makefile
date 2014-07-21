@@ -47,13 +47,13 @@ apache: apr aprutil
 		make && \
 		make install
 
-subversion: apr aprutil
+subversion: 
 	#apt-get install zlib1g-dev 
-	tar zxvf ${SOFTS_SRC}/${SUBVERSION_SRC}.tar.gz
-	unzip ${SOFTS_SRC}/${SQLITE_AMALGAMATION_SRC}.zip -x -d ${SUBVERSION_SRC}
-	cd ${SUBVERSION_SRC} && \
-		mv ${SQLITE_AMALGAMATION_SRC} ./sqlite-amalgamation  && \
-		./configure --prefix=/opt/svn --with-apr=/usr/local/apr-httpd --with-apr-util=/usr/local/apr-util-httpd  && \
+	tar zxvf ${SOFTS_SRC}/${SUBVERSION_SRC}.tar.gz -C ${INSTALL_ROOT}
+	unzip ${SOFTS_SRC}/${SQLITE_AMALGAMATION_SRC}.zip -x -d ${INSTALL_ROOT}/${SUBVERSION_SRC}
+	cd ${INSTALL_ROOT}/${SUBVERSION_SRC} && \
+		mv ./${SQLITE_AMALGAMATION_SRC} ${INSTALL_ROOT}/${SUBVERSION_SRC}/sqlite-amalgamation  && \
+		./configure --prefix=/usr/local/svn --with-apr=/usr/local/apr-httpd --with-apr-util=/usr/local/apr-util-httpd  && \
 		make && \
 		make install
 		#./configure --prefix=/opt/svn --with-apxs=/usr/local/apache2.2.9/bin/apxs --with-apr=/usr/local/apr --with-apr-util=/usr/local/apr
