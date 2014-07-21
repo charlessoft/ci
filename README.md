@@ -46,3 +46,10 @@ submodule 更新库太慢了,直接下载压缩包放在目录下还快些.
 $wget https://github.com/charlessoft/ci_softs/archive/master.zip 
 
 
+软件下载地址:
+===
+maven  
+http://mirrors.hust.edu.cn/apache/maven/binaries/  
+zookeeper  
+http://archive.apache.org/dist/hadoop/zookeeper/zookeeper-3.2.2/  
+

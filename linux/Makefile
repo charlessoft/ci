@@ -28,29 +28,31 @@ jdk:
 #echo "export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar" >> /etc/profile
 #echo "export JAVA_HOME JAVA_BIN PATH CLASSPATH" >> /etc/profile
 
-apache:
+apr:
 	tar zxvf ${SOFTS_SRC}/${APR_SRC}.tar.gz -C ${INSTALL_ROOT}
-	tar zxvf ${SOFTS_SRC}/${APRUTIL_SRC}.tar.gz -C ${INSTALL_ROOT}
-	tar zxvf ${SOFTS_SRC}/${APACHEHTTP_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${APR_SRC} && \
 		./configure --prefix=/usr/local/apr-httpd && \
 		make && \
 		make install 
+aprutil:
+	tar zxvf ${SOFTS_SRC}/${APRUTIL_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${APRUTIL_SRC} && \
 		./configure --prefix=/usr/local/apr-util-httpd --with-apr=/usr/local/apr-httpd/ && \
 		make && \
 		make install
+apache: apr aprutil
+	tar zxvf ${SOFTS_SRC}/${APACHEHTTP_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${APACHEHTTP_SRC} && \
 		./configure --prefix=/usr/local/apache2.2.9 --enable-dav --enable-so --enable-maintainer-mode --with-apr=/usr/local/apr-httpd/ --with-apr-util=/usr/local/apr-util-httpd/ --with-included-apr && \
 		make && \
 		make install
 
-subversion:
+subversion: apr aprutil
 	#apt-get install zlib1g-dev 
 	tar zxvf ${SOFTS_SRC}/${SUBVERSION_SRC}.tar.gz
 	unzip ${SOFTS_SRC}/${SQLITE_AMALGAMATION_SRC}.zip -x -d ${SUBVERSION_SRC}
 	cd ${SUBVERSION_SRC} && \
-		mv ${SQLITE_AMALGAMATION_SRC} sqlite-amalgamation  && \
+		mv ${SQLITE_AMALGAMATION_SRC} ./sqlite-amalgamation  && \
 		./configure --prefix=/opt/svn --with-apr=/usr/local/apr-httpd --with-apr-util=/usr/local/apr-util-httpd  && \
 		make && \
 		make install
