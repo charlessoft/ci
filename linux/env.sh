@@ -2,7 +2,8 @@
 JAVA_HOME=/usr/local/jdk 
 JAVA_BIN=$JAVA_HOME/bin 
 M2_HOME=/usr/local/apache-maven 
-PATH=$PATH:$JAVA_HOME/bin:$M2_HOME/bin 
+SVN_HOME=/usr/local/svn
+PATH=$PATH:$JAVA_HOME/bin:$M2_HOME/bin:$SVN_HOME/bin
 CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar 
 echo JAVA_HOME=$JAVA_HOME 
 echo JAVA_BIN=$JAVA_BIN 
