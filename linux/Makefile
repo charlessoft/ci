@@ -43,7 +43,13 @@ aprutil:
 apache: apr aprutil
 	tar zxvf ${SOFTS_SRC}/${APACHEHTTP_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${APACHEHTTP_SRC} && \
-		./configure --prefix=/usr/local/apache2.2.9 --enable-dav --enable-so --enable-maintainer-mode --with-apr=/usr/local/apr-httpd/ --with-apr-util=/usr/local/apr-util-httpd/ --with-included-apr && \
+		./configure --prefix=${INSTALL_ROOT}/apache \
+		--enable-dav \
+		--enable-so \
+		--enable-maintainer-mode \
+		--with-apr=${INSTALL_ROOT}/apr-httpd/ \
+		--with-apr-util=${INSTALL_ROOT}/apr-util-httpd/ \
+		--with-included-apr && \
 		make && \
 		make install
 
