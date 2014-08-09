@@ -9,6 +9,7 @@ APRUTIL_SRC=apr-util-1.3.8
 APACHEHTTP_SRC=httpd-2.2.9
 SUBVERSION_SRC=subversion-1.8.5
 SQLITE_AMALGAMATION_SRC=sqlite-amalgamation-3080301
+JMETER_SRC=apache-jmeter-2.11
 SOFTS_SRC=/softs
 env: 
 	chmod +x env.sh
@@ -103,6 +104,11 @@ install_slave: jdk maven
 	ln -s /cygdrive/c/Program\ Files\ \(x86\)/Java/jdk1.6.0_38/bin/java.exe /usr/bin/java
 
 	#echo "install slave"
+
+jmeter:
+	tar zxvf ${SOFTS_SRC}/${JMETER_SRC}.tgz -C ${INSTALL_ROOT}
+	ln -s ${INSTALL_ROOT}/${JMETER_SRC} ${INSTALL_ROOT}/jmeter
+
 
 users:
 	chmod +x UserMgr/CreateUser.sh 
