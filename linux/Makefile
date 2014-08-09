@@ -10,6 +10,9 @@ APACHEHTTP_SRC=httpd-2.2.9
 SUBVERSION_SRC=subversion-1.8.5
 SQLITE_AMALGAMATION_SRC=sqlite-amalgamation-3080301
 JMETER_SRC=apache-jmeter-2.11
+SONARQUBE_SOURCE=sonarqube-4.4
+SONAR_RUNNER_DIST_SOURCE=sonar-runner-dist-2.4
+SONAR_RUNNER_SOURCE=sonar-runner-2.4
 SOFTS_SRC=/softs
 env: 
 	chmod +x env.sh
@@ -109,6 +112,11 @@ jmeter:
 	tar zxvf ${SOFTS_SRC}/${JMETER_SRC}.tgz -C ${INSTALL_ROOT}
 	ln -s ${INSTALL_ROOT}/${JMETER_SRC} ${INSTALL_ROOT}/jmeter
 
+sonar:
+	unzip ${SOFT_FOLDER}/${SONARQUBE_SOURCE}.zip -d ${INSTALL_ROOT}
+	unzip ${SOFT_FOLDER}/${SONAR_RUNNER_DIST_SOURCE}.zip -d ${INSTALL_ROOT}
+	ln -s ${INSTALL_ROOT}/${SONARQUBE_SOURCE} ${INSTALL_ROOT}/sonarqube
+	ln -s ${INSTALL_ROOT}/${SONAR_RUNNER_SOURCE} ${INSTALL_ROOT}/sonar_runner
 
 users:
 	chmod +x UserMgr/CreateUser.sh 
