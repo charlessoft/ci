@@ -9,8 +9,8 @@ APRUTIL_SRC=apr-util-1.3.8
 APACHEHTTP_SRC=httpd-2.2.9
 SUBVERSION_SRC=subversion-1.8.5
 SQLITE_AMALGAMATION_SRC=sqlite-amalgamation-3080301
-SOFTS_SRC=../softs
-init: users
+SOFTS_SRC=/softs
+env: 
 	chmod +x env.sh
 	sh env.sh
 jdk:
