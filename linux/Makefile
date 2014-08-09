@@ -118,6 +118,70 @@ sonar:
 	ln -s ${INSTALL_ROOT}/${SONARQUBE_SOURCE} ${INSTALL_ROOT}/sonarqube
 	ln -s ${INSTALL_ROOT}/${SONAR_RUNNER_SOURCE} ${INSTALL_ROOT}/sonar_runner
 
+mysql:
+	tar zxvf ${SOFTS_SRC}/${MYSQL_SRC}.tar.gz -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
+		cmake .
+	cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
+		make && make install
+	chown -R mysql.mysql ${INSTALL_ROOT}/${MYSQL_SRC}
+	chmod +x ${INSTALL_ROOT}/${MYSQL_SRC}/scripts/mysql_install_db
+	cd ${INSTALL_ROOT}/${MYSQL_SRC}/scripts && \
+		./mysql_install_db --user=mysql --basedir=${INSTALL_ROOT}/mysql --datadir=${INSTALL_ROOT}/mysql/data 
+	cd ${INSTALL_ROOT}/${MYSQL_SRC}/support-files && \
+		cp mysql.server /etc/rc.d/init.d/mysql && \
+		cp my-default.cnf /etc/my.cnf 
+	chmod +x /etc/rc.d/init.d/mysql 
+	chkconfig --add mysql
+	chkconfig mysql on
+	service mysql start
+
+libxml2:
+	tar zxvf ${SOFTS_SRC}/${LIBXML_SRC}.tar.gz -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${LIBXML_SRC} && \
+		./configure --prefix=${INSTALL_ROOT}/libxml2
+	cd ${INSTALL_ROOT}/${LIBXML_SRC} && \
+		make && make install 
+
+php_curl_module:
+	cd ${INSTALL_ROOT}/${PHP_SRC}/ext/curl && \
+		./phpize && \
+		./configure --with-curl=/libs/curl && \
+		make
+	#复制生成的curl.so文件到php5的extension配置目录,修改php.ini 
+	#php5的配置目录路径 /usr/local/php5/lib/php/extensions/no-debug-non-zts-20121212
+	#修改php.ini 增加 extension=curl.so
+	#php.ini的目录, 源码安装的话.需要拷贝源码中的php.ini-production 到/usr/local/php/lib/php.ini
+php: 
+	tar zxvf ${SOFTS_SRC}/${PHP_SRC}.tar.gz -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${PHP_SRC} && \
+		./configure --prefix=${INSTALL_ROOT}/php5 \
+		--with-mysql=${INSTALL_ROOT}/mysql \
+		--with-apxs2=${INSTALL_ROOT}/apache/bin/apxs \
+		--with-libxml-dir=${INSTALL_ROOT}/libxml2 
+		#--with-gd \
+		#--with-zlib \
+		#--with-curl \
+		#--with-ldap \
+		#--with-gettext \
+		#--with-iconv \
+		#--enable-mbstring \
+		#--enable-soap \
+		#--with-xmlrpc \
+		#--with-jpeg-dir=${INSTALL_ROOT}/jpeg6 \
+		#--with-png-dir=/usr/local/libpng2 \
+		#--with-freetype-dir=/usr/local/freetype \
+		#--with-config-file-path=/usr/local/php5/etc
+	cd ${INSTALL_ROOT}/${PHP_SRC} && \
+		make && make install
+	cp ${INSTALL_ROOT}/${PHP_SRC}/php.ini-production  ${INSTALL_ROOT}/php5/lib/php.ini
+
+#下载地址:
+#nginx-1.7.2 
+#http://nginx.org/download/nginx-1.7.2.tar.gz
+
+#apache
+#http://apache.fayea.com/apache-mirror//httpd/httpd-2.4.10.tar.gz
 users:
 	chmod +x UserMgr/CreateUser.sh 
 	sh UserMgr/CreateUser.sh 
