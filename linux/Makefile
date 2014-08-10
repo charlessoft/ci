@@ -357,8 +357,17 @@ php_curl_module:
 	#php5的配置目录路径 /usr/local/php5/lib/php/extensions/no-debug-non-zts-20121212
 	#修改php.ini 增加 extension=curl.so
 	#php.ini的目录, 源码安装的话.需要拷贝源码中的php.ini-production 到/usr/local/php/lib/php.ini
-	
-php5: 
+php5_apache:
+	tar zxvf ${SOFTS_SRC}/${PHP_SRC}.tar.gz -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${PHP_SRC} && \
+		./configure --prefix=${INSTALL_ROOT}/php5 \
+		--with-mysql=${INSTALL_ROOT}/mysql \
+		--with-apxs2=${INSTALL_ROOT}/apache/bin/apxs \
+		--with-libxml-dir=${INSTALL_ROOT}/libxml2 
+	cd ${INSTALL_ROOT}/${PHP_SRC} && \
+		make && make install 
+
+php5_nginx: 
 	ln -fs /usr/lib64/libjpeg.so /usr/lib/libjpeg.so
 	ln -fs /usr/lib64/libldap.so /usr/lib/libldap.so
 	ln -fs /usr/lib64/libpng.so /usr/lib/libpng.so
@@ -515,3 +524,11 @@ vimrc:
 	git clone https://github.com/charlessoft/vimrc.git
 	mv vimrc ~/.vim_runtime
 	cd ~/.vim_runtime;sh install_awesome_vimrc.sh
+
+centos_php:
+	yum install httpd httpd-devel 
+	yum install mysql mysql-server
+	yum install php php-devel
+	yum install php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc
+	#etc/init.d/httpd restart
+	#/var/www/html/
