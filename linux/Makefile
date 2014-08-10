@@ -1,6 +1,49 @@
+LIBSPATH=/libs
+ZLIB_FILE=zlib-1.2.8.tar.gz
+ZLIB_FOLDER=zlib-1.2.8
+ZLIB_PATH=${LIBSPATH}/zlib
+ZLIB_CPPFLAGS=$(ZLIB_PATH)/include
+ZLIB_LDFLAGS=$(ZLIB_PATH)/lib
+
+GIT_FILE=git-1.7.8.tar.gz
+GIT_FOLDER=git-1.7.8
+GIT_PATH=${LIBSPATH}/git
+GIT_CPPFLAGS=$(GIT_PATH)/include
+GIT_LDFLAGS=$(GIT_PATH)/lib
+
+OPENSSL_FILE=openssl-1.0.1c.tar.gz
+OPENSSL_FOLDER=openssl-1.0.1c
+OPENSSL_PATH=/libs/openssl
+OPENSSL_CPPFLAGS=$(OPENSSL_PATH)/include
+OPENSSL_CPPFLAGS_OPENSSL=$(OPENSSL_PATH)/include/openssl
+OPENSSL_LDFLAGS=$(OPENSSL_PATH)/lib
+
+CURL_FILE=curl-7.31.0.tar.bz2
+CURL_FOLDER=curl-7.31.0
+CURL_PATH=/libs/curl
+CURL_CPPFLAGS=$(CURL_PATH)/include
+CURL_LDFLAGS=$(CURL_PATH)/lib
+
+SCONS_FILE=scons-2.3.0.zip
+SCONS_FOLDER=scons-2.3.0
+export MYSCONS=$(PWD)/$(SCONS_FOLDER)
+export SCONS_LIB_DIR=$(MYSCONS)/engine
+
+JSONCPP_FILE=jsoncpp-src-0.5.0.tar.gz
+JSONCPP_FOLDER=jsoncpp-src-0.5.0
+JSONCPP_PATH=/libs/jsoncpp
+JSONCPP_CPPFLAGS=$(JSONCPP_PATH)/include
+JSONCPP_LDFLAGS=$(JSONCPP_PATH)
+
+LOG4CPLUS_FILE=log4cplus-1.1.2-rc2.tar.bz2
+LOG4CPLUS_FOLDER=log4cplus-1.1.2-rc2
+LOG4CPLUS_PATH=/libs/log4cplus
+LOG4CPLUS_CPPFLAGS=$(LOG4CPLUS_PATH)/include
+LOG4CPLUS_LDFLAGS=$(LOG4CPLUS_PATH)/lib
 INSTALL_ROOT=/usr/local
 TOMCAT_SRC=apache-tomcat-7.0.52
 JDK_FILE=jdk-6u38-ea-bin-b04-linux-i586-31_oct_2012.bin
+JDK_X64_FILE=jdk-6u38-ea-bin-b04-linux-amd64-31_oct_2012-rpm.bin
 JDK_SRC=jdk1.6.0_38
 MAVEN_SRC=apache-maven-3.2.1
 JENKINS_SRC=jenkins
@@ -18,10 +61,43 @@ LIBMCRYPT_SRC=libmcrypt-2.5.8
 MCRYPT_SRC=mcrypt-2.6.8
 MHASH_SRC=mhash-0.9.9.9
 MYSQL_SRC=mysql-5.6.20
+MYSQL_NAME=mysql
+MYSQL_DATA_PATH=/home/www/data
 LIBXML_SRC=libxml2-2.7.2
 PHP_SRC=php-5.5.15
 MEMCACHE_SRC=memcache-2.2.7
+
+
+NGINX_SRC=nginx-1.7.4
+EGINX_SRC=eginx-1.7.4
+export OSTYPE="`uname -s`"
+
+ZLIB_SRC=zlib-1.2.8
+PCRE_SRC=pcre-8.33
+OPENSSL_SRC=openssl-1.0.1c
+
+NGX_DEPS=--with-openssl=../openssl \
+		 --with-pcre=../pcre \
+		 --with-zlib=../zlib \
+
+NGX_MODULES=--with-http_ssl_module 
 SOFTS_SRC=/softs
+
+nginx:
+	ln -sf ${OPENSSL_FOLDER} openssl
+	ln -sf ${ZLIB_SRC} zlib
+	ln -sf ${PCRE_SRC} pcre
+	tar zxvf ${ZLIB_SRC}.tar.gz
+	tar zxvf ${PCRE_SRC}.tar.gz
+	tar zxvf ${OPENSSL_FOLDER}.tar.gz
+	tar zxvf ${NGINX_SRC}.tar.gz
+	cd ${NGINX_SRC} && \
+		./configure --prefix=${INSTALL_ROOT}/nginx \
+		--with-cc-opt=" " \
+		${NGX_MODULES} \
+		${NGX_DEPS}
+	cd ${NGINX_SRC} && \
+		make && make install
 
 mcrypt:
 	tar zxvf ${SOFTS_SRC}/${MCRYPT_SRC}.tar.gz -C ${INSTALL_ROOT}
@@ -29,9 +105,24 @@ mcrypt:
 		/sbin/ldconfig && \
 		./configure && make && make install
 mhash:
-	tar xvf ${SOFTS_SRC}/${MHASH_SRC}.tar.bz2 -C ${INSTALL_ROOT}
+	tar xvf ${SOFTS_SRC}/${MHASH_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${MHASH_SRC} && \
 		./configure && make && make install
+	#64位系统使用
+	ln -sf /usr/local/lib/libmhash.a /usr/lib64/libmhash.a
+	ln -sf /usr/local/lib/libmhash.la /usr/lib64/libmhash.la
+	ln -sf /usr/local/lib/libmhash.so /usr/lib64/libmhash.so
+	ln -sf /usr/local/lib/libmhash.so.2 /usr/lib64/libmhash.so.2
+	ln -sf /usr/local/lib/libmhash.so.2.0.1 /usr/lib64/libmhash.so.2.0.1
+	ldconfig
+
+	##32位系统使用
+	#ln -sf /usr/local/lib/libmhash.a /usr/lib/libmhash.a
+	#ln -sf /usr/local/lib/libmhash.la /usr/lib/libmhash.la
+	#ln -sf /usr/local/lib/libmhash.so /usr/lib/libmhash.so
+	#ln -sf /usr/local/lib/libmhash.so.2 /usr/lib/libmhash.so.2
+	#ln -sf /usr/local/lib/libmhash.so.2.0.1 /usr/lib/libmhash.so.2.0.1
+	#ldconfig
 
 libmcrypt:
 	tar zxvf ${SOFTS_SRC}/${LIBMCRYPT_SRC}.tar.gz -C ${INSTALL_ROOT}
@@ -68,6 +159,14 @@ iconv:
 env: 
 	chmod +x env.sh
 	sh env.sh
+
+
+jdk64:
+	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
+	cd ${SOFTS_SRC}; cp ${SOFTS_SRC}/${JDK_X64_FILE} ${INSTALL_ROOT}
+	chmod +x ${INSTALL_ROOT}/${JDK_X64_FILE}
+	cd ${INSTALL_ROOT} && ./${JDK_X64_FILE}
+	cd ${INSTALL_ROOT}; ln -s ${JDK_SRC} ${INSTALL_ROOT}/jdk
 jdk:
 	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
 	cd ${SOFTS_SRC}; cp ${SOFTS_SRC}/${JDK_FILE} ${INSTALL_ROOT}
@@ -172,6 +271,9 @@ sonar:
 	ln -s ${INSTALL_ROOT}/${SONAR_RUNNER_SOURCE} ${INSTALL_ROOT}/sonar_runner
 
 mysql:
+	groupadd mysql
+	useradd -g mysql mysql -M -s/sbin/nologin
+	echo "${INSTALL_ROOT}/mysql/lib/" >> /etc/ld.so.conf
 	tar zxvf ${SOFTS_SRC}/${MYSQL_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
 		cmake .
@@ -180,7 +282,10 @@ mysql:
 	chown -R mysql.mysql ${INSTALL_ROOT}/${MYSQL_SRC}
 	chmod +x ${INSTALL_ROOT}/${MYSQL_SRC}/scripts/mysql_install_db
 	cd ${INSTALL_ROOT}/${MYSQL_SRC}/scripts && \
-		./mysql_install_db --user=mysql --basedir=${INSTALL_ROOT}/mysql --datadir=${INSTALL_ROOT}/mysql/data 
+		./mysql_install_db \
+		--user=mysql \
+		--basedir=${INSTALL_ROOT}/mysql \
+		--datadir=${INSTALL_ROOT}/mysql/data 
 	cd ${INSTALL_ROOT}/${MYSQL_SRC}/support-files && \
 		cp mysql.server /etc/rc.d/init.d/mysql && \
 		cp my-default.cnf /etc/my.cnf 
@@ -188,7 +293,54 @@ mysql:
 	chkconfig --add mysql
 	chkconfig mysql on
 	service mysql start
-
+#mysql:
+#	#groupadd mysql
+#	#useradd -g mysql mysql -M -s/sbin/nologin
+#	mkdir -p ${MYSQL_DATA_PATH}/mysql
+#	mkdir -p /home/www/logs/mysql 
+#	chown -R mysql:mysql /home/www/logs/mysql
+#	#tar zxvf ${SOFTS_SRC}/${MYSQL_SRC}.tar.gz -C ${INSTALL_ROOT}
+#	#cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
+#	#cmake . -DCMAKE_INSTALL_PREFIX=${INSTALL_ROOT}/mysql/ \
+#	#-DMYSQL_DATADIR=${MYSQL_DATA_PATH}/mysql \
+#	#-DMYSQL_UNIX_ADDR=${MYSQL_DATA_PATH}/mysql/mysqld.sock \
+#	#-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+#	#-DWITH_MYISAM_STORAGE_ENGINE=1 \
+#	#-DENABLED_LOCAL_INFILE=1 \
+#	#-DMYSQL_TCP_PORT=3306 \
+#	#-DWITH_EXTRA_CHARSETS:STRING=utf8,gbk \
+#	#-DDEFAULT_CHARSET=utf8 \
+#	#-DDEFAULT_COLLATION=utf8_general_ci \
+#	#-DWITH_DEBUG=0 \
+#	#-DWITH_READLINE=1 \
+#	#-DWITH_SSL=yes \
+#	#-DSYSCONFDIR=${MYSQL_DATA_PATH}/mysql
+#	#cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
+#		#make && make install
+#	chmod +w ${INSTALL_ROOT}/${MYSQL_NAME}
+#	chown -R mysql.mysql ${INSTALL_ROOT}/${MYSQL_NAME}
+#	chmod +x ${INSTALL_ROOT}/${MYSQL_SRC}/scripts/mysql_install_db
+#	cd ${INSTALL_ROOT}/${MYSQL_SRC}/scripts && \
+#		./mysql_install_db \
+#		--user=mysql \
+#		--basedir=${INSTALL_ROOT}/mysql \
+#		--datadir=${MYSQL_DATA_PATH}/mysql/data 
+#	cd ${INSTALL_ROOT}/${MYSQL_SRC}/support-files && \
+#		cp mysql.server /etc/rc.d/init.d/mysqld && \
+#		cp my-default.cnf ${MYSQL_DATA_PATH}/mysql/my.cnf 
+#	chmod +x /etc/rc.d/init.d/mysqld
+#	#chkconfig --add mysql
+#	#chkconfig mysql on
+#	#service mysql start
+#	echo "basedir = /usr/local/mysql" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
+#	echo "datadir = /home/www/data/mysql" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
+#	echo "log-error = /home/www/logs/mysql_error.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
+#	echo "pid-file = /home/www/data/mysql/mysql.pid" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
+#	echo "relay-log-index = /home/www/logs/mysql/relay.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
+#	echo "relay-log-info-file = /home/www/logs/mysql/relay.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
+#	echo "relay-log = /home/www/logs/mysql/relay.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
+#	echo "log-slow-queries = /home/www/logs/mysql/slow.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
+#
 libxml2:
 	tar zxvf ${SOFTS_SRC}/${LIBXML_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${LIBXML_SRC} && \
@@ -207,6 +359,9 @@ php_curl_module:
 	#php.ini的目录, 源码安装的话.需要拷贝源码中的php.ini-production 到/usr/local/php/lib/php.ini
 	
 php5: 
+	ln -fs /usr/lib64/libjpeg.so /usr/lib/libjpeg.so
+	ln -fs /usr/lib64/libldap.so /usr/lib/libldap.so
+	ln -fs /usr/lib64/libpng.so /usr/lib/libpng.so
 	cp -frp /usr/lib64/libldap* /usr/lib/
 	tar zxvf ${SOFTS_SRC}/${PHP_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${PHP_SRC} && \
@@ -215,13 +370,13 @@ php5:
 		--with-mysql=${INSTALL_ROOT}/mysql \
 		--with-mysqli=${INSTALL_ROOT}/mysql/bin/mysql_config \
 		--with-libxml-dir=${INSTALL_ROOT}/libxml2 \
-		--with-apxs2=${INSTALL_ROOT}/apache/bin/apxs \
 		--with-iconv-dir=/usr/local/lib64 \
 		--enable-opcache=no \
 		--with-freetype-dir \
 		--with-jpeg-dir \
 		--with-png-dir \
 		--with-zlib \
+		--with-openssl \
 		--enable-xml \
 		--disable-rpath \
 		--enable-safe-mode \
@@ -249,7 +404,7 @@ php5:
 	cd ${INSTALL_ROOT}/${PHP_SRC} && \
 		make ZEND_EXTRA_LIBS='-liconv' && make install
 	#cp ${INSTALL_ROOT}/${PHP_SRC}/php.ini-production  ${INSTALL_ROOT}/php5/lib/php.ini
-	cp  ${PWD}/php/php.ini ${INSTALL_ROOT}/php5/lib/php.ini
+	cp  ${PWD}/php/php.ini-production ${INSTALL_ROOT}/php5/lib/php.ini
 
 
 memcache:
@@ -283,3 +438,80 @@ users:
 	chmod +x UserMgr/CreateUser.sh 
 	sh UserMgr/CreateUser.sh 
 
+
+zlib:
+	tar zxvf ${SOFTS_SRC}/$(ZLIB_FILE) 
+	@echo "正在编译zlib模块....."
+	cd $(ZLIB_FOLDER); CFLAGS="-O3 -fPIC" ./configure --prefix=$(ZLIB_PATH) --static #--archs="-arch x86_64"
+	cd $(ZLIB_FOLDER); make
+	cd $(ZLIB_FOLDER); make install
+	@echo "编译zlib模块结束............"
+git:
+	tar zxvf ${SOFTS_SRC}/$(GIT_FILE)
+	@echo "build git module...."
+	cd $(GIT_FOLDER); \
+		./configure \
+		--with-zlib=$(ZLIB_PATH) \
+		--with-curl=$(CURL_PATH) \
+		--with-curl=$(CURL_PATH) \
+		--prefix=${LIBSPATH}/git
+	cd $(GIT_FOLDER); make
+	cd $(GIT_FOLDER); make install
+	#ln -s /usr/local/bin/git /usr/bin/git
+	ln -s /libs/git/bin/git /usr/bin/git
+
+	@echo "build git module end"
+openssl:
+	tar zxvf ${SOFTS_SRC}/$(OPENSSL_FILE)
+	@echo "编译openssl模块....."
+	#cd $(OPENSSL_FOLDER); ./Configure darwin64-x86_64-cc --prefix=$(OPENSSL_PATH) threads zlib enable-static-engine
+	#cd $(OPENSSL_FOLDER); ./config -fPIC shared --prefix=$(OPENSSL_PATH) -L$(ZLIB_LDFLAGS) -I$(ZLIB_CPPFLAGS) threads zlib 
+	cd $(OPENSSL_FOLDER); ./config -fPIC --prefix=$(OPENSSL_PATH) -L$(ZLIB_LDFLAGS) -I$(ZLIB_CPPFLAGS) threads zlib enable-static-engine
+	cd $(OPENSSL_FOLDER); make
+	cd $(OPENSSL_FOLDER); make install
+	@echo "编译openssl模块结束............"
+jsoncpp:
+	@echo "编译jsoncpp模块....."
+	unzip ${SOFTS_SRC}/$(SCONS_FILE)
+	tar xvf ${SOFTS_SRC}/$(JSONCPP_FILE)
+	cd $(JSONCPP_FOLDER);python $(MYSCONS)/script/scons platform=linux-gcc
+	#cd $(JSONCPP_FOLDER);python /scons-2.3.0/script/scons platform=linux-gcc
+	mkdir -p $(JSONCPP_LDFLAGS)
+	cp -fr $(JSONCPP_FOLDER)/include $(JSONCPP_LDFLAGS)
+	cp -rf $(JSONCPP_FOLDER)/libs  $(JSONCPP_LDFLAGS)
+	@echo "编译jsoncpp模块结束..........."
+curl:
+	tar xvf ${SOFTS_SRC}/$(CURL_FILE)
+	@echo "编译curl模块....."
+	cd $(CURL_FOLDER); ./configure --prefix=$(CURL_PATH) \
+		LDFLAGS="-L$(ZLIB_LDFLAGS) -L$(OPENSSL_LDFLAGS)" \
+		CPPFLAGS="-fPIC -I$(ZLIB_CPPFLAGS) -I$(OPENSSL_CPPFLAGS) -I$(OPENSSL_CPPFLAGS_OPENSSL)" \
+		LIBS=-ldl --with-ssl=$(OPENSSL_LDFLAGS)
+	cd $(CURL_FOLDER); make
+	cd $(CURL_FOLDER); make install
+	@echo "编译curl模块结束............"
+
+	#mkdir -p /usr/local/include/curl
+	#cp -rv ./lib/.libs/curl/include/curl/*.* /usr/local/include/curl
+	#cp -rv ./lib/.libs/curl/lib/*.* /usr/local/lib
+
+	#mkdir -rv /usr/local/include/openssl 
+	#cp -rv libs/openssl/include /usr/local/include/openssl 
+	#cp -rv libs/openssl/lib/*.* /usr/local/lib 
+vim74:
+	tar jxvf ${SOFTS_SRC}/vim-7.4.tar.bz2
+	tar zxvf ${SOFTS_SRC}/vim-7.2-extra.tar.gz
+	tar zxvf ${SOFTS_SRC}/vim-7.2-lang.tar.gz
+	mv vim72 vim74
+	cd vim74/src; ./configure --enable-multibyte \
+		--with-features=huge \
+		--disable-selinux
+	cd vim74/src; make
+	cd vim74/src; make install
+	cp vim74/src/vim /usr/local/bin
+
+
+vimrc:
+	git clone https://github.com/charlessoft/vimrc.git
+	mv vimrc ~/.vim_runtime
+	cd ~/.vim_runtime;sh install_awesome_vimrc.sh
