@@ -13,7 +13,58 @@ JMETER_SRC=apache-jmeter-2.11
 SONARQUBE_SOURCE=sonarqube-4.4
 SONAR_RUNNER_DIST_SOURCE=sonar-runner-dist-2.4
 SONAR_RUNNER_SOURCE=sonar-runner-2.4
+ICONV_SRC=libiconv-1.14
+LIBMCRYPT_SRC=libmcrypt-2.5.8
+MCRYPT_SRC=mcrypt-2.6.8
+MHASH_SRC=mhash-0.9.9.9
+MYSQL_SRC=mysql-5.6.20
+LIBXML_SRC=libxml2-2.7.2
+PHP_SRC=php-5.5.15
+MEMCACHE_SRC=memcache-2.2.7
 SOFTS_SRC=/softs
+
+mcrypt:
+	tar zxvf ${SOFTS_SRC}/${MCRYPT_SRC}.tar.gz -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${MCRYPT_SRC} && \
+		/sbin/ldconfig && \
+		./configure && make && make install
+mhash:
+	tar xvf ${SOFTS_SRC}/${MHASH_SRC}.tar.bz2 -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${MHASH_SRC} && \
+		./configure && make && make install
+
+libmcrypt:
+	tar zxvf ${SOFTS_SRC}/${LIBMCRYPT_SRC}.tar.gz -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${LIBMCRYPT_SRC} && \
+		./configure && make && make install
+	/sbin/ldconfig
+	cd ${INSTALL_ROOT}/${LIBMCRYPT_SRC}/libltdl && \
+		./configure --enable-ltdl-install && \
+		make && make install
+	#64位系统
+	ln -sf /usr/local/lib/libmcrypt.la /usr/lib64/libmcrypt.la
+	ln -sf /usr/local/lib/libmcrypt.so /usr/lib64/libmcrypt.so
+	ln -sf /usr/local/lib/libmcrypt.so.4 /usr/lib64/libmcrypt.so.4
+	ln -sf /usr/local/lib/libmcrypt.so.4.4.8 /usr/lib64/libmcrypt.so.4.4.8
+	ln -sf /usr/local/bin/libmcrypt-config /usr/bin/libmcrypt-config
+	ln -sf /usr/local/lib/libiconv.so.2 /usr/lib64/libiconv.so.2
+	ldconfig
+
+
+##32位系统
+#ln -sf /usr/local/lib/libmcrypt.la /usr/lib/libmcrypt.la
+#ln -sf /usr/local/lib/libmcrypt.so /usr/lib/libmcrypt.so
+#ln -sf /usr/local/lib/libmcrypt.so.4 /usr/lib/libmcrypt.so.4
+#ln -sf /usr/local/lib/libmcrypt.so.4.4.8 /usr/lib/libmcrypt.so.4.4.8
+#ln -sf /usr/local/bin/libmcrypt-config /usr/bin/libmcrypt-config
+#ln -sf /usr/local/lib/libiconv.so.2 /usr/lib/libiconv.so.2
+#ldconfig
+
+iconv:
+	tar zxvf ${SOFTS_SRC}/${ICONV_SRC}.tar.gz -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${ICONV_SRC} && \
+		./configure && \
+		make && make install
 env: 
 	chmod +x env.sh
 	sh env.sh
@@ -56,6 +107,8 @@ apache: apr aprutil
 		--with-included-apr && \
 		make && \
 		make install
+	#cp ${INSTALL_ROOT}/apache/conf/httpd.conf ${INSTALL_ROOT}/apache/conf/httpd.conf_bak
+	#cp ./php/httpd.conf ${INSTALL_ROOT}/apache/conf/
 
 subversion: 
 	#apt-get install zlib1g-dev 
@@ -152,36 +205,81 @@ php_curl_module:
 	#php5的配置目录路径 /usr/local/php5/lib/php/extensions/no-debug-non-zts-20121212
 	#修改php.ini 增加 extension=curl.so
 	#php.ini的目录, 源码安装的话.需要拷贝源码中的php.ini-production 到/usr/local/php/lib/php.ini
-php: 
+	
+php5: 
+	cp -frp /usr/lib64/libldap* /usr/lib/
 	tar zxvf ${SOFTS_SRC}/${PHP_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${PHP_SRC} && \
 		./configure --prefix=${INSTALL_ROOT}/php5 \
+		--with-config-file-path=${INSTALL_ROOT}/php5/etc \
 		--with-mysql=${INSTALL_ROOT}/mysql \
+		--with-mysqli=${INSTALL_ROOT}/mysql/bin/mysql_config \
+		--with-libxml-dir=${INSTALL_ROOT}/libxml2 \
 		--with-apxs2=${INSTALL_ROOT}/apache/bin/apxs \
-		--with-libxml-dir=${INSTALL_ROOT}/libxml2 
-		#--with-gd \
-		#--with-zlib \
-		#--with-curl \
-		#--with-ldap \
-		#--with-gettext \
-		#--with-iconv \
-		#--enable-mbstring \
-		#--enable-soap \
-		#--with-xmlrpc \
-		#--with-jpeg-dir=${INSTALL_ROOT}/jpeg6 \
-		#--with-png-dir=/usr/local/libpng2 \
-		#--with-freetype-dir=/usr/local/freetype \
-		#--with-config-file-path=/usr/local/php5/etc
+		--with-iconv-dir=/usr/local/lib64 \
+		--enable-opcache=no \
+		--with-freetype-dir \
+		--with-jpeg-dir \
+		--with-png-dir \
+		--with-zlib \
+		--enable-xml \
+		--disable-rpath \
+		--enable-safe-mode \
+		--enable-bcmath \
+		--enable-shmop \
+		--enable-sysvsem \
+		--enable-inline-optimization \
+		--with-curl \
+		--with-curlwrappers \
+		--enable-mbregex \
+		--enable-fpm \
+		--enable-mbstring \
+		--with-mcrypt \
+		--with-gd \
+		-enable-gd-native-ttf \
+		--with-mhash \
+		--enable-pcntl \
+		--enable-sockets \
+		--with-ldap \
+		--with-ldap-sasl \
+		--with-xmlrpc \
+		--enable-zip \
+		--enable-soap \
+		--without-pear
 	cd ${INSTALL_ROOT}/${PHP_SRC} && \
-		make && make install
-	cp ${INSTALL_ROOT}/${PHP_SRC}/php.ini-production  ${INSTALL_ROOT}/php5/lib/php.ini
+		make ZEND_EXTRA_LIBS='-liconv' && make install
+	#cp ${INSTALL_ROOT}/${PHP_SRC}/php.ini-production  ${INSTALL_ROOT}/php5/lib/php.ini
+	cp  ${PWD}/php/php.ini ${INSTALL_ROOT}/php5/lib/php.ini
 
+
+memcache:
+	tar zxvf ${SOFTS_SRC}/${MEMCACHE_SRC}.tgz -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${MEMCACHE_SRC} && \
+		${INSTALL_ROOT}/php5/bin/phpize &&  \
+		./configure --with-php-config=${INSTALL_ROOT}/php5/bin/php-config && \
+		make && make install
 #下载地址:
 #nginx-1.7.2 
 #http://nginx.org/download/nginx-1.7.2.tar.gz
 
 #apache
 #http://apache.fayea.com/apache-mirror//httpd/httpd-2.4.10.tar.gz
+
+#iconv
+#http://ftp.gnu.org/gnu/libiconv/libiconv-1.14.tar.gz
+
+#libmcrypt
+#http://www.51osos.com/uploads/soft/libmcrypt-2.5.8.tar.gz
+
+#mcrypt
+#http://nchc.dl.sourceforge.net/project/mcrypt/MCrypt/2.6.8/mcrypt-2.6.8.tar.gz
+
+#mhash
+#http://ncu.dl.sourceforge.net/project/mhash/mhash/0.9.9.9/mhash-0.9.9.9.tar.bz2
+
+#memcache
+#http://pecl.php.net/get/memcache-2.2.7.tgz
 users:
 	chmod +x UserMgr/CreateUser.sh 
 	sh UserMgr/CreateUser.sh 
+
