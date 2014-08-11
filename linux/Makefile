@@ -274,6 +274,7 @@ mysql:
 	groupadd mysql
 	useradd -g mysql mysql -M -s/sbin/nologin
 	echo "${INSTALL_ROOT}/mysql/lib/" >> /etc/ld.so.conf
+	ldconfig
 	tar zxvf ${SOFTS_SRC}/${MYSQL_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
 		cmake .
@@ -287,9 +288,9 @@ mysql:
 		--basedir=${INSTALL_ROOT}/mysql \
 		--datadir=${INSTALL_ROOT}/mysql/data 
 	cd ${INSTALL_ROOT}/${MYSQL_SRC}/support-files && \
-		cp mysql.server /etc/rc.d/init.d/mysql && \
+		cp mysql.server /etc/init.d/mysql && \
 		cp my-default.cnf /etc/my.cnf 
-	chmod +x /etc/rc.d/init.d/mysql 
+	chmod +x /etc/init.d/mysql 
 	chkconfig --add mysql
 	chkconfig mysql on
 	service mysql start
