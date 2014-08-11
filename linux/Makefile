@@ -461,14 +461,14 @@ git:
 	@echo "build git module...."
 	cd $(GIT_FOLDER); \
 		./configure \
-		--with-zlib=$(ZLIB_PATH) \
-		--with-curl=$(CURL_PATH) \
-		--with-curl=$(CURL_PATH) \
 		--prefix=${LIBSPATH}/git
+		#--with-zlib=$(ZLIB_PATH) \
+		#--with-curl=$(CURL_PATH) \
+		#--with-curl=$(CURL_PATH) \
 	cd $(GIT_FOLDER); make
 	cd $(GIT_FOLDER); make install
 	#ln -s /usr/local/bin/git /usr/bin/git
-	ln -s /libs/git/bin/git /usr/bin/git
+	ln -sf /libs/git/bin/git /usr/bin/git
 
 	@echo "build git module end"
 openssl:
@@ -527,9 +527,11 @@ vimrc:
 	cd ~/.vim_runtime;sh install_awesome_vimrc.sh
 
 centos_php:
-	yum install httpd httpd-devel 
-	yum install mysql mysql-server
-	yum install php php-devel
-	yum install php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc
+	yum install -y httpd httpd-devel 
+	#yum install mysql mysql-server
+	yum install -y php php-devel
+	yum install -y php-mysql php-gd php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc
 	#etc/init.d/httpd restart
 	#/var/www/html/
+centos_softs:
+	yum install -y gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel libtool libtool-libs libevent-devel libevent openldap openldap-devel nss_ldap openldap-clients openldap-servers libtool-ltdl libtool-ltdl-devel bison cmake perl-devel 
