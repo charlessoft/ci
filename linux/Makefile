@@ -270,10 +270,13 @@ jmeter:
 	ln -s ${INSTALL_ROOT}/${JMETER_SRC} ${INSTALL_ROOT}/jmeter
 
 sonar:
-	unzip ${SOFT_FOLDER}/${SONARQUBE_SOURCE}.zip -d ${INSTALL_ROOT}
-	unzip ${SOFT_FOLDER}/${SONAR_RUNNER_DIST_SOURCE}.zip -d ${INSTALL_ROOT}
-	ln -s ${INSTALL_ROOT}/${SONARQUBE_SOURCE} ${INSTALL_ROOT}/sonarqube
-	ln -s ${INSTALL_ROOT}/${SONAR_RUNNER_SOURCE} ${INSTALL_ROOT}/sonar_runner
+	unzip -o ${SOFTS_SRC}/${SONARQUBE_SOURCE}.zip -d ${INSTALL_ROOT}
+	unzip -o ${SOFTS_SRC}/${SONAR_RUNNER_DIST_SOURCE}.zip -d ${INSTALL_ROOT}
+	ln -fs ${INSTALL_ROOT}/${SONARQUBE_SOURCE} ${INSTALL_ROOT}/sonarqube
+	ln -fs ${INSTALL_ROOT}/${SONAR_RUNNER_SOURCE} ${INSTALL_ROOT}/sonar_runner
+	cp ${PWD}/sonar_demo/sonar.properties ${INSTALL_ROOT}/sonarqube/conf/
+	cp ${PWD}/sonar_demo/sonar-runner.properties ${INSTALL_ROOT}/sonar_runner/conf/
+
 
 mysql:
 	groupadd mysql
