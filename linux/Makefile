@@ -84,13 +84,16 @@ NGX_MODULES=--with-http_ssl_module
 SOFTS_SRC=/softs
 
 nginx:
+	groupadd nginx 
+	useradd -g nginx nginx -M -s/sbin/nologin
+	mkdir -p /home/www/logs/nginx
 	ln -sf ${OPENSSL_FOLDER} openssl
 	ln -sf ${ZLIB_SRC} zlib
 	ln -sf ${PCRE_SRC} pcre
-	tar zxvf ${ZLIB_SRC}.tar.gz
-	tar zxvf ${PCRE_SRC}.tar.gz
-	tar zxvf ${OPENSSL_FOLDER}.tar.gz
-	tar zxvf ${NGINX_SRC}.tar.gz
+	tar zxvf ${SOFTS_SRC}/${ZLIB_SRC}.tar.gz
+	tar zxvf ${SOFTS_SRC}/${PCRE_SRC}.tar.gz
+	tar zxvf ${SOFTS_SRC}/${OPENSSL_FOLDER}.tar.gz
+	tar zxvf ${SOFTS_SRC}/${NGINX_SRC}.tar.gz
 	cd ${NGINX_SRC} && \
 		./configure --prefix=${INSTALL_ROOT}/nginx \
 		--with-cc-opt=" " \
@@ -98,6 +101,8 @@ nginx:
 		${NGX_DEPS}
 	cd ${NGINX_SRC} && \
 		make && make install
+	cp ${PWD}/nginx_conf/nginx.conf ${INSTALL_ROOT}/nginx/conf 
+	cp ${PWD}/nginx_conf/bin ${INSTALL_ROOT}/nginx/ -R
 
 mcrypt:
 	tar zxvf ${SOFTS_SRC}/${MCRYPT_SRC}.tar.gz -C ${INSTALL_ROOT}
@@ -294,54 +299,59 @@ mysql:
 	chkconfig --add mysql
 	chkconfig mysql on
 	service mysql start
-#mysql:
-#	#groupadd mysql
-#	#useradd -g mysql mysql -M -s/sbin/nologin
-#	mkdir -p ${MYSQL_DATA_PATH}/mysql
-#	mkdir -p /home/www/logs/mysql 
-#	chown -R mysql:mysql /home/www/logs/mysql
-#	#tar zxvf ${SOFTS_SRC}/${MYSQL_SRC}.tar.gz -C ${INSTALL_ROOT}
-#	#cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
-#	#cmake . -DCMAKE_INSTALL_PREFIX=${INSTALL_ROOT}/mysql/ \
-#	#-DMYSQL_DATADIR=${MYSQL_DATA_PATH}/mysql \
-#	#-DMYSQL_UNIX_ADDR=${MYSQL_DATA_PATH}/mysql/mysqld.sock \
-#	#-DWITH_INNOBASE_STORAGE_ENGINE=1 \
-#	#-DWITH_MYISAM_STORAGE_ENGINE=1 \
-#	#-DENABLED_LOCAL_INFILE=1 \
-#	#-DMYSQL_TCP_PORT=3306 \
-#	#-DWITH_EXTRA_CHARSETS:STRING=utf8,gbk \
-#	#-DDEFAULT_CHARSET=utf8 \
-#	#-DDEFAULT_COLLATION=utf8_general_ci \
-#	#-DWITH_DEBUG=0 \
-#	#-DWITH_READLINE=1 \
-#	#-DWITH_SSL=yes \
-#	#-DSYSCONFDIR=${MYSQL_DATA_PATH}/mysql
-#	#cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
-#		#make && make install
-#	chmod +w ${INSTALL_ROOT}/${MYSQL_NAME}
-#	chown -R mysql.mysql ${INSTALL_ROOT}/${MYSQL_NAME}
-#	chmod +x ${INSTALL_ROOT}/${MYSQL_SRC}/scripts/mysql_install_db
-#	cd ${INSTALL_ROOT}/${MYSQL_SRC}/scripts && \
-#		./mysql_install_db \
-#		--user=mysql \
-#		--basedir=${INSTALL_ROOT}/mysql \
-#		--datadir=${MYSQL_DATA_PATH}/mysql/data 
-#	cd ${INSTALL_ROOT}/${MYSQL_SRC}/support-files && \
-#		cp mysql.server /etc/rc.d/init.d/mysqld && \
-#		cp my-default.cnf ${MYSQL_DATA_PATH}/mysql/my.cnf 
-#	chmod +x /etc/rc.d/init.d/mysqld
-#	#chkconfig --add mysql
-#	#chkconfig mysql on
-#	#service mysql start
-#	echo "basedir = /usr/local/mysql" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
-#	echo "datadir = /home/www/data/mysql" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
-#	echo "log-error = /home/www/logs/mysql_error.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
-#	echo "pid-file = /home/www/data/mysql/mysql.pid" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
-#	echo "relay-log-index = /home/www/logs/mysql/relay.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
-#	echo "relay-log-info-file = /home/www/logs/mysql/relay.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
-#	echo "relay-log = /home/www/logs/mysql/relay.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
-#	echo "log-slow-queries = /home/www/logs/mysql/slow.log" >> ${MYSQL_DATA_PATH}/mysql/my.cnf
-#
+
+mysql_nginx:
+	#groupadd mysql
+	#useradd -g mysql mysql -M -s/sbin/nologin
+	mkdir -p ${MYSQL_DATA_PATH}/mysql
+	mkdir -p /home/www/logs/mysql 
+	chown -R mysql:mysql /home/www/logs/mysql
+	#tar zxvf ${SOFTS_SRC}/${MYSQL_SRC}.tar.gz -C ${INSTALL_ROOT}
+	#cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
+	#cmake . -DCMAKE_INSTALL_PREFIX=${INSTALL_ROOT}/mysql/ \
+	#-DMYSQL_DATADIR=${MYSQL_DATA_PATH}/mysql \
+	#-DMYSQL_UNIX_ADDR=${MYSQL_DATA_PATH}/mysql/mysqld.sock \
+	#-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+	#-DWITH_MYISAM_STORAGE_ENGINE=1 \
+	#-DENABLED_LOCAL_INFILE=1 \
+	#-DMYSQL_TCP_PORT=3306 \
+	#-DWITH_EXTRA_CHARSETS:STRING=utf8,gbk \
+	#-DDEFAULT_CHARSET=utf8 \
+	#-DDEFAULT_COLLATION=utf8_general_ci \
+	#-DWITH_DEBUG=0 \
+	#-DWITH_READLINE=1 \
+	#-DWITH_SSL=yes \
+	#-DSYSCONFDIR=${MYSQL_DATA_PATH}/mysql
+	#cd ${INSTALL_ROOT}/${MYSQL_SRC} && \
+		#make && make install
+	chmod +w ${INSTALL_ROOT}/mysql
+	chown -R mysql.mysql ${INSTALL_ROOT}/mysql
+	chmod +x ${INSTALL_ROOT}/${MYSQL_SRC}/scripts/mysql_install_db
+	cd ${INSTALL_ROOT}/mysql/scripts && \
+		./mysql_install_db \
+		--user=mysql \
+		--basedir=${INSTALL_ROOT}/mysql \
+		--datadir=${MYSQL_DATA_PATH}/mysql/data &
+	#cd ${INSTALL_ROOT}/mysql/support-files && \
+		#cp mysql.server /etc/init.d/mysqld && \
+		#cp my-default.cnf ${MYSQL_DATA_PATH}/mysql/my.cnf 
+	#chmod +x /etc/init.d/mysqld
+	#mkdir /home/www/logs/mysql -p
+	#chmod +w /home/www/logs/mysql
+	#chown -R mysql:mysql /home/www/logs/mysql
+	##chkconfig --add mysql
+	##chkconfig mysql on
+	##service mysql start
+	#sed -i "8 ibasedir = /usr/local/mysql" ${MYSQL_DATA_PATH}/mysql/my.cnf
+	#sed -i "8 idatadir = /home/www/data/mysql" ${MYSQL_DATA_PATH}/mysql/my.cnf
+	#sed -i "8 ilog-error = /home/www/logs/mysql_error.log" ${MYSQL_DATA_PATH}/mysql/my.cnf
+	#sed -i "8 ipid-file = /home/www/data/mysql/mysql.pid" ${MYSQL_DATA_PATH}/mysql/my.cnf
+	#sed -i "8 irelay-log-index = /home/www/logs/mysql/relay.log" ${MYSQL_DATA_PATH}/mysql/my.cnf
+	#sed -i "8 irelay-log-info-file = /home/www/logs/mysql/relay.log" ${MYSQL_DATA_PATH}/mysql/my.cnf
+	#sed -i "8 irelay-log = /home/www/logs/mysql/relay.log" ${MYSQL_DATA_PATH}/mysql/my.cnf
+	##sed -i "8 ilog-slow-queries = /home/www/logs/mysql/slow.log" ${MYSQL_DATA_PATH}/mysql/my.cnf
+	#/etc/init.d/mysqld start
+
 libxml2:
 	tar zxvf ${SOFTS_SRC}/${LIBXML_SRC}.tar.gz -C ${INSTALL_ROOT}
 	cd ${INSTALL_ROOT}/${LIBXML_SRC} && \
@@ -415,6 +425,9 @@ php5_nginx:
 		make ZEND_EXTRA_LIBS='-liconv' && make install
 	#cp ${INSTALL_ROOT}/${PHP_SRC}/php.ini-production  ${INSTALL_ROOT}/php5/lib/php.ini
 	cp  ${PWD}/php/php.ini-production ${INSTALL_ROOT}/php5/lib/php.ini
+	mv /usr/local/php5/etc/php-fpm.conf.default ${INSTALL_ROOT}/php5/etc/php-fpm.conf
+	${INSTALL_ROOT}/php5/bin/php ${SOFTS_SRC}/go-pear.phar
+	cp ${PWD}/php/php-fpm.conf ${INSTALL_ROOT}/php5/etc/php-fpm.conf 
 
 
 memcache:
