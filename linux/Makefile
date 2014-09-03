@@ -67,6 +67,7 @@ LIBXML_SRC=libxml2-2.7.2
 PHP_SRC=php-5.5.15
 MEMCACHE_SRC=memcache-2.2.7
 
+PYTHON_SRC=Python-2.7.8
 
 NGINX_SRC=nginx-1.7.4
 EGINX_SRC=eginx-1.7.4
@@ -82,6 +83,15 @@ NGX_DEPS=--with-openssl=../openssl \
 
 NGX_MODULES=--with-http_ssl_module 
 SOFTS_SRC=/softs
+
+python278:
+	tar zxvf ${SOFTS_SRC}/${PYTHON_SRC}.tgz -C ${SOFTS_SRC}
+	mkdir /usr/local/python27 -p
+	cd ${SOFTS_SRC}/${PYTHON_SRC} && \
+		./configure --prefix=/usr/local/python27 && \
+		make && make install 
+	mv /usr/bin/python /usr/bin/python_old
+	ln -s /usr/local/python27/bin/python2.7 /usr/bin/python
 
 nginx:
 	groupadd nginx 
