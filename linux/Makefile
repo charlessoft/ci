@@ -539,9 +539,18 @@ vim74:
 	tar zxvf ${SOFTS_SRC}/vim-7.2-extra.tar.gz
 	tar zxvf ${SOFTS_SRC}/vim-7.2-lang.tar.gz
 	mv vim72 vim74
-	cd vim74/src; ./configure --enable-multibyte \
+	#cd vim74/src; ./configure --enable-multibyte \
+		#--with-features=huge \
+		#--disable-selinux
+	cd vim74/src; ./configure \
 		--with-features=huge \
-		--disable-selinux
+		--enable-pythoninterp=yes \
+		--enable-cscope \
+		--enable-fontset \
+		--enable-perlinterp \
+		--enable-rubyinterp \
+		--with-python-config-dir=/usr/lib/python2.7/config \
+		--prefix=/opt/local
 	cd vim74/src; make
 	cd vim74/src; make install
 	cp vim74/src/vim /usr/local/bin
