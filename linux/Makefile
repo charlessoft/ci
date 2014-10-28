@@ -85,6 +85,9 @@ NGX_MODULES=--with-http_ssl_module
 SOFTS_SRC=/tmp
 help:
 	@echo "持续集成至少需要jdk,tomcat,jenkins.war"
+	@echo "基本的执行命令 make jdk tomcat jenkins env "
+	@echo "执行完毕需要source /etc/profile "
+	@echo "启动路径 http://localhost:8080/jenkins"
 	@exit 0
 
 python278:
