@@ -82,7 +82,10 @@ NGX_DEPS=--with-openssl=../openssl \
 		 --with-zlib=../zlib \
 
 NGX_MODULES=--with-http_ssl_module 
-SOFTS_SRC=/softs
+SOFTS_SRC=/tmp
+help:
+	@echo "持续集成至少需要jdk,tomcat,jenkins.war"
+	@exit 0
 
 python278:
 	tar zxvf ${SOFTS_SRC}/${PYTHON_SRC}.tgz -C ${SOFTS_SRC}
