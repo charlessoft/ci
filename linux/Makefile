@@ -87,6 +87,12 @@ help:
 	@echo "持续集成至少需要jdk,tomcat,jenkins.war"
 	@echo "基本的执行命令 make jdk tomcat jenkins env "
 	@echo "如果需要maven就安装maven,执行命令 make maven"
+	@echo "make users --用户创建jenkins用户"
+	@echo "make jdk --安装jdk"
+	@echo "make jdk64 --安装jdk64版本"
+	@echo "make tomcat --安装tomcat"
+	@echo "make jenkins --安装jenkins"
+	@echo "make env --设置环境变量"
 	@echo "执行完毕需要source /etc/profile "
 	@echo "启动路径 http://localhost:8080/jenkins"
 	@exit 0
