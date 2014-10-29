@@ -43,6 +43,7 @@ LOG4CPLUS_CPPFLAGS=$(LOG4CPLUS_PATH)/include
 LOG4CPLUS_LDFLAGS=$(LOG4CPLUS_PATH)/lib
 INSTALL_ROOT=/usr/local
 TOMCAT_SRC=apache-tomcat-7.0.52
+#jdk 1.6
 JDK_FILE=jdk-6u38-ea-bin-b04-linux-i586-31_oct_2012.bin
 JDK_X64_FILE=jdk-6u38-ea-bin-b04-linux-amd64-31_oct_2012-rpm.bin
 JDK_SRC=jdk1.6.0_38
@@ -197,7 +198,7 @@ jdk18_x64:
 	cd ${INSTALL_ROOT}/${JDK_SRC_18} 
 	ln -sf ${INSTALL_ROOT}/${JDK_SRC_18} ${INSTALL_ROOT}/jdk
 
-jdk64:
+jdk16_x64:
 	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
 	cd ${SOFTS_SRC}; cp ${SOFTS_SRC}/${JDK_X64_FILE} ${INSTALL_ROOT}
 	chmod +x ${INSTALL_ROOT}/${JDK_X64_FILE}
