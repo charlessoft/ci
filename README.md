@@ -53,3 +53,5 @@ http://mirrors.hust.edu.cn/apache/maven/binaries/
 zookeeper  
 http://archive.apache.org/dist/hadoop/zookeeper/zookeeper-3.2.2/  
 
+jdk 1.8 x64
+http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.tar.gz?AuthParam=1414562116_44cb49eadfbb1706094da5b807b167d5

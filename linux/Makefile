@@ -1,3 +1,4 @@
+SOFTS_SRC=/tmp
 LIBSPATH=/libs
 ZLIB_FILE=zlib-1.2.8.tar.gz
 ZLIB_FOLDER=zlib-1.2.8
@@ -45,6 +46,10 @@ TOMCAT_SRC=apache-tomcat-7.0.52
 JDK_FILE=jdk-6u38-ea-bin-b04-linux-i586-31_oct_2012.bin
 JDK_X64_FILE=jdk-6u38-ea-bin-b04-linux-amd64-31_oct_2012-rpm.bin
 JDK_SRC=jdk1.6.0_38
+#1.8
+JDK_FILE_18_X64=jdk-8u25-linux-x64
+JDK_SRC_18=jdk1.8.0_25
+
 MAVEN_SRC=apache-maven-3.2.1
 JENKINS_SRC=jenkins
 APR_SRC=apr-1.3.6
@@ -82,7 +87,6 @@ NGX_DEPS=--with-openssl=../openssl \
 		 --with-zlib=../zlib \
 
 NGX_MODULES=--with-http_ssl_module 
-SOFTS_SRC=/tmp
 help:
 	@echo "持续集成至少需要jdk,tomcat,jenkins.war"
 	@echo "基本的执行命令 make jdk tomcat jenkins env "
@@ -188,19 +192,23 @@ env:
 	chmod +x env.sh
 	sh env.sh
 
+jdk18_x64:
+	tar zxvf ${SOFTS_SRC}/${JDK_FILE_18_X64}.tar.gz -C ${INSTALL_ROOT}
+	cd ${INSTALL_ROOT}/${JDK_SRC_18} 
+	ln -sf ${INSTALL_ROOT}/${JDK_SRC_18} ${INSTALL_ROOT}/jdk
 
 jdk64:
 	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
 	cd ${SOFTS_SRC}; cp ${SOFTS_SRC}/${JDK_X64_FILE} ${INSTALL_ROOT}
 	chmod +x ${INSTALL_ROOT}/${JDK_X64_FILE}
 	cd ${INSTALL_ROOT} && ./${JDK_X64_FILE}
-	cd ${INSTALL_ROOT}; ln -s ${JDK_SRC} ${INSTALL_ROOT}/jdk
+	cd ${INSTALL_ROOT}; ln -sf ${JDK_SRC} ${INSTALL_ROOT}/jdk
 jdk:
 	test -d ${INSTALL_ROOT} || mkdir ${INSTALL_ROOT}
 	cd ${SOFTS_SRC}; cp ${SOFTS_SRC}/${JDK_FILE} ${INSTALL_ROOT}
 	chmod +x ${INSTALL_ROOT}/${JDK_FILE}
 	cd ${INSTALL_ROOT} && ./${JDK_FILE}
-	cd ${INSTALL_ROOT}; ln -s ${JDK_SRC} ${INSTALL_ROOT}/jdk
+	cd ${INSTALL_ROOT}; ln -sf ${JDK_SRC} ${INSTALL_ROOT}/jdk
 
 #如何写入到 /etc/profile中
 #echo "export JAVA_HOME=/usr/local/jdk1.6.0_38" >> /etc/profile
