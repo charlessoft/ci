@@ -51,7 +51,27 @@ $wget https://github.com/charlessoft/ci_softs/archive/master.zip
 maven  
 http://mirrors.hust.edu.cn/apache/maven/binaries/  
 zookeeper  
-http://archive.apache.org/dist/hadoop/zookeeper/zookeeper-3.2.2/  
+http://archive.apache.org/dist/hadoop/zookeeper/zookeeper-3.2.2/   
 
-jdk 1.8 x64
-http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.tar.gz?AuthParam=1414562116_44cb49eadfbb1706094da5b807b167d5
+jdk 1.8 x64  
+http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.tar.gz?AuthParam=1414562116_44cb49eadfbb1706094da5b807b167d5  
+
+python 278  
+https://www.python.org/ftp/python/2.7.8/Python-2.7.8.tgz  
+
+getpip.py   
+https://bootstrap.pypa.io/get-pip.py   
+
+git 2.4.1  
+http://pkgs.fedoraproject.org/repo/pkgs/git/git-2.4.1.tar.gz/c72b2dcff11ebd25cb4fa488d6279717/git-2.4.1.tar.gz  
+
+yum install zlib zlib-devel  
+#python 需要  
+yum install openssl  
+yum install openssl-devel  
+  
+#requets[security]需要  
+yum install libffi-devel  
+yum install sqlite-devel -y  
+#git https需要  
+yum install curl-devel  
